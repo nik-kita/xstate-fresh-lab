@@ -1,4 +1,4 @@
-import { effect, Signal, signal, useSignal } from "@preact/signals";
+import { effect, Signal, useSignal } from "@preact/signals";
 import {
   Actor,
   ActorOptions,
@@ -16,18 +16,15 @@ export function createSignalMachineContext<TLogic extends AnyActorLogic>(
   ) => Signal<T>;
   actor: Actor<TLogic>;
 } {
-  const actor = signal(createActor(machine, options));
-  const subscribers = signal<
-    Set<(snapshot: SnapshotFrom<TLogic>) => unknown>
-  >(
-    new Set(),
-  );
+  console.log("createSignalMachineContext");
+  const actor = createActor(machine, options);
+  const subscribers = new Set<(snapshot: SnapshotFrom<TLogic>) => unknown>();
 
   effect(() => {
-    const subscription = actor.peek().subscribe((s) => {
-      for (const cb of subscribers.peek()) cb(s);
+    const subscription = actor.subscribe((s) => {
+      for (const cb of subscribers) cb(s);
     });
-    actor.peek().start();
+    actor.start();
 
     return () => {
       subscription.unsubscribe();
@@ -36,15 +33,15 @@ export function createSignalMachineContext<TLogic extends AnyActorLogic>(
 
   return {
     signalizeSelector<T>(cb: (s: SnapshotFrom<TLogic>) => T) {
-      const signalization = useSignal(cb(actor.peek().getSnapshot()));
+      const signalization = useSignal(cb(actor.getSnapshot()));
       const _cb = (s: SnapshotFrom<TLogic>) => {
         const currentValue = cb(s);
         signalization.value = currentValue;
       };
-      subscribers.peek().add(_cb);
+      subscribers.add(_cb);
 
       return signalization;
     },
-    actor: actor.peek(),
+    actor,
   };
 }

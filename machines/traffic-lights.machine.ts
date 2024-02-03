@@ -6,64 +6,40 @@ export const machine = createMachine(
     initial: "Idle",
     states: {
       Idle: {
-        on: {
-          RED: {
-            target: "Red",
-          },
-          TO_RED: {
-            target: "Yellow_before_red",
-          },
-          GREEN: {
-            target: "Green",
-          },
-          TO_GREEN: {
+        after: {
+          1000: {
             target: "Yellow_before_green",
           },
         },
       },
       Red: {
-        on: {
-          NEXT: {
+        after: {
+          1000: {
             target: "Yellow_before_green",
           },
         },
       },
       Yellow_before_red: {
-        on: {
-          NEXT: {
+        after: {
+          500: {
             target: "Red",
           },
         },
       },
       Green: {
-        on: {
-          NEXT: {
+        after: {
+          1500: {
             target: "Yellow_before_red",
           },
         },
       },
       Yellow_before_green: {
-        on: {
-          NEXT: {
+        after: {
+          500: {
             target: "Green",
           },
         },
       },
     },
-    types: {
-      events: {} as
-        | { type: "" }
-        | { type: "RED" }
-        | { type: "NEXT" }
-        | { type: "GREEN" }
-        | { type: "TO_RED" }
-        | { type: "TO_GREEN" },
-    },
-  },
-  {
-    actions: {},
-    actors: {},
-    guards: {},
-    delays: {},
   },
 );

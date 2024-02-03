@@ -1,4 +1,3 @@
-import { Button } from "../components/Button.tsx";
 import { TrafficContext } from "./traffic-machine-context.ts";
 
 export default function Traffic() {
@@ -7,24 +6,14 @@ export default function Traffic() {
     actor,
     signalizeSelector,
   } = TrafficContext;
-  const x = signalizeSelector((snapshot) => {
+  const trafficState = signalizeSelector((snapshot) => {
     return snapshot.value;
   });
+
   return (
     <div>
       Traffic
-      <pre>{x}</pre>
-      <Button
-        onClick={() => {
-          if (x.peek() === "Idle") {
-            actor.send({ type: "GREEN" });
-          } else {
-            actor.send({ type: "NEXT" });
-          }
-        }}
-      >
-        click me!
-      </Button>
+      <pre>{trafficState}</pre>
     </div>
   );
 }
