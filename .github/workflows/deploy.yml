@@ -1,9 +1,9 @@
 name: Deploy
 on:
   push:
-    branches: [main]
+    branches: [traffix-lights/version-1]
   pull_request:
-    branches: main
+    branches: traffix-lights/version-1
 
 jobs:
   deploy:
