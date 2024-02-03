@@ -28,7 +28,7 @@ export const machine = createMachine(
       },
       Green: {
         after: {
-          1500: {
+          1000: {
             target: "Yellow_before_red",
           },
         },

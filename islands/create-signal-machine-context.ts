@@ -16,7 +16,6 @@ export function createSignalMachineContext<TLogic extends AnyActorLogic>(
   ) => Signal<T>;
   actor: Actor<TLogic>;
 } {
-  console.log("createSignalMachineContext");
   const actor = createActor(machine, options);
   const subscribers = new Set<(snapshot: SnapshotFrom<TLogic>) => unknown>();
 
