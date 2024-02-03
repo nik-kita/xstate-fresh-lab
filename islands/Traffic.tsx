@@ -1,17 +1,13 @@
-import { genLogger } from "../utils/gen-logger.ts";
-import { TrafficContext } from "./traffic-machine-context.ts";
 import { Button } from "../components/Button.tsx";
-
-const _log = genLogger({ name: "Traffic", margin_left: 10 });
+import { TrafficContext } from "./traffic-machine-context.ts";
 
 export default function Traffic() {
-  _log("render!");
+  console.log("render!");
   const {
     actor,
     signalizeSelector,
   } = TrafficContext;
   const x = signalizeSelector((snapshot) => {
-    _log("cb in signalizeSelector");
     return snapshot.value;
   });
   return (
