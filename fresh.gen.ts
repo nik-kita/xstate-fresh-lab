@@ -8,6 +8,9 @@ import * as $api_joke from "./routes/api/joke.ts";
 import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
 import * as $Counter from "./islands/Counter.tsx";
+import * as $Traffic from "./islands/Traffic.tsx";
+import * as $create_signal_machine_context from "./islands/create-signal-machine-context.ts";
+import * as $traffic_machine_context from "./islands/traffic-machine-context.ts";
 import { type Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -20,6 +23,10 @@ const manifest = {
   },
   islands: {
     "./islands/Counter.tsx": $Counter,
+    "./islands/Traffic.tsx": $Traffic,
+    "./islands/create-signal-machine-context.ts":
+      $create_signal_machine_context,
+    "./islands/traffic-machine-context.ts": $traffic_machine_context,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;
