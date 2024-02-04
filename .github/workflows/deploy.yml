@@ -24,8 +24,8 @@ jobs:
           deno-version: v1.x
 
       - name: Build step
-          run: "deno task build & sleep 10" # 📝 Update the build command(s) if necessary
-          # TODO remove sleep
+        run: "deno task build & sleep 10" # 📝 Update the build command(s) if necessary
+        # TODO remove sleep
 
 
       - name: Upload to Deno Deploy
