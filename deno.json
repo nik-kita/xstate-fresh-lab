@@ -5,9 +5,11 @@
     "cli": "echo \"import '\\$fresh/src/dev/cli.ts'\" | deno run --unstable -A -",
     "manifest": "deno task cli manifest $(pwd)",
     "start": "deno run -A --watch=static/,routes/ dev.ts",
-    "build": "npx tailwindcss -i ./input.css -o static/styles.css --minify",
+    "build": "deno run -A dev.ts build",
     "preview": "deno run -A main.ts",
-    "update": "deno run -A -r https://fresh.deno.dev/update ."
+    "update": "deno run -A -r https://fresh.deno.dev/update .",
+    "tw": "deno run -A npm:tailwindcss -i ./input.css -o static/styles.css --watch",
+    "tw:build": "deno run -A npm:tailwindcss -i ./input.css -o static/styles.css --minify"
   },
   "lint": { "rules": { "tags": ["fresh", "recommended"] } },
   "exclude": ["**/_fresh/*"],

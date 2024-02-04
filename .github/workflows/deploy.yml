@@ -23,16 +23,13 @@ jobs:
         with:
           deno-version: v1.x
 
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: lts/*
-
       - name: Build step
-        run: "npm install && deno task build"
-      
+          run: "deno task build & sleep 10" # 📝 Update the build command(s) if necessary
+          # TODO remove sleep
+
+
       - name: Upload to Deno Deploy
         uses: denoland/deployctl@v1
         with:
           project: "traffic-v1" # 📝 Update the deploy project name if necessary
-          entrypoint: "./main.ts" # 📝 Update the entrypoint if necessary
+          entrypoint: "main.ts" # 📝 Update the entrypoint if necessary
