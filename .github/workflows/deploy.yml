@@ -24,7 +24,7 @@ jobs:
           deno-version: v1.x
 
       - name: Build step
-        run: "deno task build & sleep 10" # 📝 Update the build command(s) if necessary
+        run: "deno cache --reload dev.ts && deno cache --reload main.ts && deno task build" # 📝 Update the build command(s) if necessary
         # TODO remove sleep
 
 
