@@ -1,9 +1,9 @@
 name: Deploy
 on:
   push:
-    branches: [main]
+    branches: [traffic-v1]
   pull_request:
-    branches: main
+    branches: traffic-v1
 
 jobs:
   deploy:
