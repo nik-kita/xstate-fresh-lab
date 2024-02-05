@@ -1,11 +1,10 @@
 // @deno-types="npm:xstate"
-import { setup } from "xstate";
-import { context, settings, types } from "./configuration.ts";
+import { assign, setup } from "xstate";
+import { context, settings } from "./configuration.ts";
 
 export const machine = setup(settings).createMachine(
   {
     id: "variant 2 3",
-    types,
     context,
     type: "parallel",
     states: {
@@ -152,7 +151,7 @@ export const machine = setup(settings).createMachine(
         states: {
           green: {
             entry: {
-              type: "update-color",
+              type: "green-color",
             },
             after: {
               "3000": {
@@ -163,23 +162,29 @@ export const machine = setup(settings).createMachine(
           },
           yellow: {
             entry: {
-              type: "update-color",
+              type: "yellow-color",
             },
             after: {
               "500": [
                 {
                   target: "red",
                   guard: "is-prev-green",
+                  actions: assign({
+                    prev_traffic_light: "red",
+                  }),
                 },
                 {
                   target: "green",
+                  actions: assign({
+                    prev_traffic_light: "green",
+                  }),
                 },
               ],
             },
           },
           red: {
             entry: {
-              type: "update-color",
+              type: "red-color",
             },
             after: {
               "500": {

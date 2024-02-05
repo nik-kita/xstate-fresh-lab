@@ -1,5 +1,6 @@
+// @deno-types="npm:xstate"
 import { assign } from "xstate";
-import { StreetMachineCtx, TrafficLight } from "../types.ts";
+import { StreetMachineCtx } from "../types.ts";
 
 export const types = {} as {
   context: StreetMachineCtx;
@@ -10,8 +11,8 @@ export const types = {} as {
 export const context = {
   count_cars_on_zebra: 0,
   count_pedestrians_on_zebra: 0,
-  current_car_traffic_light: "green",
-  prev_car_traffic_light: "yellow",
+  traffic_light: "green",
+  prev_traffic_light: "red",
 } satisfies StreetMachineCtx;
 export const settings = {
   types: {} as {
@@ -50,21 +51,20 @@ export const settings = {
         } satisfies Partial<StreetMachineCtx>,
       );
     },
-    "update-color": ({ context }) => {
-      const { prev_car_traffic_light, current_car_traffic_light } = context;
-      let curr: TrafficLight;
-
-      switch (current_car_traffic_light) {
-        case "yellow":
-          curr = prev_car_traffic_light === "green" ? "red" : "green";
-          break;
-        default:
-          curr = "yellow";
-      }
-
+    "green-color": () => {
+      return () =>
+        assign({
+          traffic_light: "green",
+        });
+    },
+    "yellow-color"() {
       assign({
-        prev_car_traffic_light: current_car_traffic_light,
-        current_car_traffic_light: curr,
+        traffic_light: "yellow",
+      });
+    },
+    "red-color"() {
+      assign({
+        traffic_light: "red",
       });
     },
   },
@@ -74,7 +74,7 @@ export const settings = {
       return context.count_cars_on_zebra > 0;
     },
     "is-car-traffic-green": ({ context }) => {
-      return context.current_car_traffic_light === "green";
+      return context.traffic_light === "green";
     },
     "is-pedestrian-on-zebra": ({ context }) => {
       return context.count_pedestrians_on_zebra > 0;
@@ -83,10 +83,10 @@ export const settings = {
       return context.count_cars_on_zebra === 0;
     },
     "is-car-traffic-green FALSE": ({ context }) => {
-      return context.current_car_traffic_light !== "green";
+      return context.traffic_light !== "green";
     },
     "is-prev-green": ({ context }) => {
-      return context.prev_car_traffic_light === "green";
+      return context.prev_traffic_light === "green";
     },
   },
   delays: {},

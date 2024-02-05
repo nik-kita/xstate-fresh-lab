@@ -3,15 +3,16 @@ import { createActor } from "xstate";
 import { machine } from "./street-move.machine.ts";
 import { delay } from "$std/async/delay.ts";
 
-Deno.test("Street move machine", () => {
+Deno.test({ name: "Street move machine" }, async () => {
   const actor = createActor(machine);
 
   actor.subscribe((s) => {
+    console.log(s.value);
   });
 
   actor.start();
 
-  delay(4000);
+  await delay(20000);
 
   actor.stop();
 });
