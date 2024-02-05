@@ -52,10 +52,9 @@ export const settings = {
       );
     },
     "green-color": () => {
-      return () =>
-        assign({
-          traffic_light: "green",
-        });
+      assign({
+        traffic_light: "green",
+      });
     },
     "yellow-color"() {
       assign({
