@@ -1,61 +1,12 @@
 // @deno-types="npm:xstate"
 import { setup } from "xstate";
-import { StreetMachineCtx } from "../types.ts";
-import { is_car_on_zebra } from "./is-car-on-zebra.guard.ts";
+import { context, settings, types } from "./configuration.ts";
 
-export const machine = setup({
-  types: {} as {
-    context: StreetMachineCtx;
-  },
-  actions: {
-    "car-ion-zebra": ({ context, event }) => {},
-    "car leaves zebra": ({ context, event }) => {},
-    "pedestrian-on-zebra": ({ context, event }) => {},
-    "pedestrian leaves zebra": ({ context, event }) => {},
-    "car-traffic-become-green": ({ context, event }) => {},
-    "car-traffic-become-yellow": ({ context, event }) => {},
-    "car-traffic-become-red": ({ context, event }) => {},
-  },
-  actors: {},
-  guards: {
-    "is-car-on-zebra": ({ context, event }, params) => {
-      return is_car_on_zebra(context.count_cars_on_zebra);
-    },
-    "is-car-traffic-green": ({ context, event }, params) => {
-      return false;
-    },
-    "is-pedestrian-on-zebra": ({ context, event }, params) => {
-      return false;
-    },
-    "is-car-on-zebra false": ({ context, event }, params) => {
-      return false;
-    },
-    "is-car-on-zebra FALSE": ({ context, event }, params) => {
-      return false;
-    },
-    "is-car-traffic-green FALSE": ({ context, event }, params) => {
-      return false;
-    },
-    "is-prev-green": ({ context, event }, params) => {
-      return false;
-    },
-  },
-  delays: {},
-}).createMachine(
+export const machine = setup(settings).createMachine(
   {
-    id: "variant 2",
-    types: {} as {
-      context: StreetMachineCtx;
-      events:
-        | { type: "CAR_TRAFFIC_RED" }
-        | { type: "CAR_TRAFFIC_GREEN" };
-    },
-    context: {
-      count_cars_on_zebra: 0,
-      count_pedestrians_on_zebra: 0,
-      current_car_traffic_light: "green",
-      prev_car_traffic_light: "yellow",
-    } satisfies StreetMachineCtx,
+    id: "variant 2 3",
+    types,
+    context,
     type: "parallel",
     states: {
       car: {
@@ -63,11 +14,19 @@ export const machine = setup({
         states: {
           move: {
             after: {
-              "2001": {
-                target: "#variant 2.car.stop",
-                guard: "is-car-traffic-green FALSE",
-                actions: [],
-              },
+              "2001": [
+                {
+                  target: "car.stop",
+                  guard: "is-car-traffic-green FALSE",
+                },
+                {
+                  target: "car.extra-stop",
+                  guard: "is-pedestrian-on-zebra",
+                },
+                {
+                  target: "car.cross zebra",
+                },
+              ],
             },
           },
           stop: {
@@ -87,20 +46,18 @@ export const machine = setup({
             after: {
               "300": [
                 {
-                  target: "#variant 2.car.stop",
+                  target: "car.stop",
                   guard: "is-car-traffic-green FALSE",
-                  actions: [],
                 },
                 {
-                  target: "#variant 2.car.extra-stop",
+                  target: "car.extra-stop",
                   guard: "is-pedestrian-on-zebra",
-                  actions: [],
                 },
                 {
-                  target: "#variant 2.car.cross zebra",
+                  target: "car.cross zebra",
                   actions: [
                     {
-                      type: "car-ion-zebra",
+                      type: "car-on-zebra",
                     },
                   ],
                 },
@@ -110,10 +67,10 @@ export const machine = setup({
           "cross zebra": {
             after: {
               "213": {
-                target: "#variant 2.car.move",
+                target: "car.move",
                 actions: [
                   {
-                    type: "car leaves zebra",
+                    type: "car-leaves-zebra",
                   },
                 ],
               },
@@ -128,18 +85,15 @@ export const machine = setup({
             after: {
               "7013": [
                 {
-                  target: "#variant 2.pedestrian.stop",
+                  target: "pedestrian.stop",
                   guard: "is-car-traffic-green",
-                  actions: [],
                 },
                 {
-                  target: "#variant 2.pedestrian.extra stop",
+                  target: "pedestrian.extra stop",
                   guard: "is-car-on-zebra",
-                  actions: [],
                 },
                 {
-                  target: "#variant 2.pedestrian.cross zebra",
-                  actions: [],
+                  target: "pedestrian.cross zebra",
                 },
               ],
             },
@@ -161,17 +115,15 @@ export const machine = setup({
             after: {
               "500": [
                 {
-                  target: "#variant 2.pedestrian.stop",
+                  target: "pedestrian.stop",
                   guard: "is-car-traffic-green",
-                  actions: [],
                 },
                 {
-                  target: "#variant 2.pedestrian.extra stop",
-                  guard: "is-car-on-zebra false",
-                  actions: [],
+                  target: "pedestrian.extra stop",
+                  guard: "is-car-on-zebra FALSE",
                 },
                 {
-                  target: "#variant 2.pedestrian.cross zebra",
+                  target: "pedestrian.cross zebra",
                   actions: [
                     {
                       type: "pedestrian-on-zebra",
@@ -184,10 +136,10 @@ export const machine = setup({
           "cross zebra": {
             after: {
               "1023": {
-                target: "#variant 2.pedestrian.walk",
+                target: "pedestrian.walk",
                 actions: [
                   {
-                    type: "pedestrian leaves zebra",
+                    type: "pedestrian-leaves-zebra",
                   },
                 ],
               },
@@ -200,41 +152,38 @@ export const machine = setup({
         states: {
           green: {
             entry: {
-              type: "car-traffic-become-green",
+              type: "update-color",
             },
             after: {
               "3000": {
-                target: "#variant 2.car-traffic.yellow",
+                target: "car-traffic.yellow",
                 actions: [],
               },
             },
           },
           yellow: {
             entry: {
-              type: "car-traffic-become-yellow",
+              type: "update-color",
             },
             after: {
               "500": [
                 {
-                  target: "#variant 2.car-traffic.red",
+                  target: "car-traffic.red",
                   guard: "is-prev-green",
-                  actions: [],
                 },
                 {
-                  target: "#variant 2.car-traffic.green",
-                  actions: [],
+                  target: "car-traffic.green",
                 },
               ],
             },
           },
           red: {
             entry: {
-              type: "car-traffic-become-red",
+              type: "update-color",
             },
             after: {
               "500": {
-                target: "#variant 2.car-traffic.yellow",
-                actions: [],
+                target: "car-traffic.yellow",
               },
             },
           },
