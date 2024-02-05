@@ -16,15 +16,15 @@ export const machine = setup(settings).createMachine(
             after: {
               "2001": [
                 {
-                  target: "car.stop",
+                  target: "stop",
                   guard: "is-car-traffic-green FALSE",
                 },
                 {
-                  target: "car.extra-stop",
+                  target: "extra-stop",
                   guard: "is-pedestrian-on-zebra",
                 },
                 {
-                  target: "car.cross zebra",
+                  target: "cross zebra",
                 },
               ],
             },
@@ -46,15 +46,15 @@ export const machine = setup(settings).createMachine(
             after: {
               "300": [
                 {
-                  target: "car.stop",
+                  target: "stop",
                   guard: "is-car-traffic-green FALSE",
                 },
                 {
-                  target: "car.extra-stop",
+                  target: "extra-stop",
                   guard: "is-pedestrian-on-zebra",
                 },
                 {
-                  target: "car.cross zebra",
+                  target: "cross zebra",
                   actions: [
                     {
                       type: "car-on-zebra",
@@ -67,7 +67,7 @@ export const machine = setup(settings).createMachine(
           "cross zebra": {
             after: {
               "213": {
-                target: "car.move",
+                target: "move",
                 actions: [
                   {
                     type: "car-leaves-zebra",
@@ -85,15 +85,15 @@ export const machine = setup(settings).createMachine(
             after: {
               "7013": [
                 {
-                  target: "pedestrian.stop",
+                  target: "stop",
                   guard: "is-car-traffic-green",
                 },
                 {
-                  target: "pedestrian.extra stop",
+                  target: "extra-stop",
                   guard: "is-car-on-zebra",
                 },
                 {
-                  target: "pedestrian.cross zebra",
+                  target: "cross zebra",
                 },
               ],
             },
@@ -106,24 +106,24 @@ export const machine = setup(settings).createMachine(
                   guard: "is-car-on-zebra FALSE",
                 },
                 {
-                  target: "extra stop",
+                  target: "extra-stop",
                 },
               ],
             },
           },
-          "extra stop": {
+          "extra-stop": {
             after: {
               "500": [
                 {
-                  target: "pedestrian.stop",
+                  target: "stop",
                   guard: "is-car-traffic-green",
                 },
                 {
-                  target: "pedestrian.extra stop",
+                  target: "extra-stop",
                   guard: "is-car-on-zebra FALSE",
                 },
                 {
-                  target: "pedestrian.cross zebra",
+                  target: "cross zebra",
                   actions: [
                     {
                       type: "pedestrian-on-zebra",
@@ -136,7 +136,7 @@ export const machine = setup(settings).createMachine(
           "cross zebra": {
             after: {
               "1023": {
-                target: "pedestrian.walk",
+                target: "walk",
                 actions: [
                   {
                     type: "pedestrian-leaves-zebra",
@@ -156,7 +156,7 @@ export const machine = setup(settings).createMachine(
             },
             after: {
               "3000": {
-                target: "car-traffic.yellow",
+                target: "yellow",
                 actions: [],
               },
             },
@@ -168,11 +168,11 @@ export const machine = setup(settings).createMachine(
             after: {
               "500": [
                 {
-                  target: "car-traffic.red",
+                  target: "red",
                   guard: "is-prev-green",
                 },
                 {
-                  target: "car-traffic.green",
+                  target: "green",
                 },
               ],
             },
@@ -183,7 +183,7 @@ export const machine = setup(settings).createMachine(
             },
             after: {
               "500": {
-                target: "car-traffic.yellow",
+                target: "yellow",
               },
             },
           },
