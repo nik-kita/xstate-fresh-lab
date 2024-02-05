@@ -15,6 +15,10 @@
   },
   "exclude": ["**/_fresh/*"],
   "imports": {
+    "react": "https://esm.sh/v135/preact@10.19.2/compat",
+    "react-dom": "https://esm.sh/v135/preact@10.19.2/compat",
+    "react/jsx-runtime": "https://esm.sh/v135/preact@10.19.2/compat",
+    "@types/react": "https://esm.sh/v135/preact@10.19.2/compat",
     "xstate": "https://esm.sh/xstate@5.6.0/dist/xstate.esm.js",
     "$fresh/": "https://deno.land/x/fresh@1.6.3/",
     "preact": "https://esm.sh/preact@10.19.2",
