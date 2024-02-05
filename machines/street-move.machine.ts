@@ -165,7 +165,7 @@ export const machine = setup(settings).createMachine(
               type: "yellow-color",
             },
             after: {
-              "500": [
+              "1000": [
                 {
                   target: "red",
                   guard: "is-prev-green",

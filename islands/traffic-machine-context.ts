@@ -1,4 +1,4 @@
-import { effect, useSignal } from "@preact/signals";
+import { effect, signal, useSignal } from "@preact/signals";
 // @deno-types='npm:xstate'
 import { AnyActorLogic, createActor, SnapshotFrom } from "xstate";
 import { machine } from "../machines/street-move.machine.ts";
@@ -10,11 +10,18 @@ export function createMachineContextWithSignals<TLogic extends AnyActorLogic>(
 ) {
   const actor = createActor(machine);
   const subscribers: Array<(s: SnapshotFrom<TLogic>) => void> = [];
+  const toggle = signal<"start" | "stop" | null>(null);
 
   effect(() => {
     const subscription = actor.subscribe((s) => {
       subscribers.forEach((subscriber) => subscriber(s));
     });
+
+    if (toggle.value === "start") {
+      actor.start();
+    } else if (toggle.value === "stop") {
+      actor.stop();
+    }
 
     return () => subscription.unsubscribe();
   });
@@ -29,5 +36,7 @@ export function createMachineContextWithSignals<TLogic extends AnyActorLogic>(
 
       return selection;
     },
+    start: () => toggle.value = "start",
+    stop: () => toggle.value = "stop",
   };
 }

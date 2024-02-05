@@ -1,16 +1,12 @@
-import { useEffect } from "preact/hooks";
 import { MachineContext } from "./traffic-machine-context.ts";
 
 export default function Traffic() {
-  const { actor, useSelector } = MachineContext;
+  const { actor, useSelector, start } = MachineContext;
   const traffic = useSelector((s) => {
     return s.value["car-traffic"];
   });
-  useEffect(() => {
-    actor.start();
 
-    return () => actor.stop();
-  }, []);
+  start();
 
   return (
     <div class={"flex flex-col gap-6 bg-black p-4 rounded-2xl"}>
