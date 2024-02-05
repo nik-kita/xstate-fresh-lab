@@ -51,10 +51,10 @@ export const settings = {
         } satisfies Partial<StreetMachineCtx>,
       );
     },
-    "green-color": () => {
-      assign({
-        traffic_light: "green",
-      });
+    "green-color"() {
+        assign({
+          traffic_light: "green",
+        });
     },
     "yellow-color"() {
       assign({
