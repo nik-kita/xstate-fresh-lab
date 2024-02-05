@@ -1,12 +1,10 @@
 import { MachineContext } from "./traffic-machine-context.ts";
 
 export default function Traffic() {
-  const { actor, useSelector, start } = MachineContext;
+  const { useSelector } = MachineContext;
   const traffic = useSelector((s) => {
     return s.value["car-traffic"];
   });
-
-  start();
 
   return (
     <div class={"flex flex-col gap-6 bg-black p-4 rounded-2xl"}>
