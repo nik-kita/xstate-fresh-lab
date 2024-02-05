@@ -1,15 +1,62 @@
-import { createMachine } from "xstate";
-import { StreetMachineCtx, TrafficLight } from "../types.ts";
+// @deno-types="npm:xstate"
+import { setup } from "xstate";
+import { StreetMachineCtx } from "../types.ts";
+import { is_car_on_zebra } from "./is-car-on-zebra.guard.ts";
 
-export const machine = createMachine(
+export const machine = setup({
+  types: {} as {
+    context: StreetMachineCtx;
+  },
+  actions: {
+    "car-ion-zebra": ({ context, event }) => {},
+    "car leaves zebra": ({ context, event }) => {},
+    "pedestrian-on-zebra": ({ context, event }) => {},
+    "pedestrian leaves zebra": ({ context, event }) => {},
+    "car-traffic-become-green": ({ context, event }) => {},
+    "car-traffic-become-yellow": ({ context, event }) => {},
+    "car-traffic-become-red": ({ context, event }) => {},
+  },
+  actors: {},
+  guards: {
+    "is-car-on-zebra": ({ context, event }, params) => {
+      return is_car_on_zebra(context.count_cars_on_zebra);
+    },
+    "is-car-traffic-green": ({ context, event }, params) => {
+      return false;
+    },
+    "is-pedestrian-on-zebra": ({ context, event }, params) => {
+      return false;
+    },
+    "is-car-on-zebra false": ({ context, event }, params) => {
+      return false;
+    },
+    "is-car-on-zebra FALSE": ({ context, event }, params) => {
+      return false;
+    },
+    "is-car-traffic-green FALSE": ({ context, event }, params) => {
+      return false;
+    },
+    "is-prev-green": ({ context, event }, params) => {
+      return false;
+    },
+  },
+  delays: {},
+}).createMachine(
   {
     id: "variant 2",
+    types: {} as {
+      context: StreetMachineCtx;
+      events:
+        | { type: "CAR_TRAFFIC_RED" }
+        | { type: "CAR_TRAFFIC_GREEN" };
+    },
     context: {
       count_cars_on_zebra: 0,
       count_pedestrians_on_zebra: 0,
       current_car_traffic_light: "green",
       prev_car_traffic_light: "yellow",
     } satisfies StreetMachineCtx,
+    type: "parallel",
     states: {
       car: {
         initial: "move",
@@ -193,12 +240,6 @@ export const machine = createMachine(
           },
         },
       },
-    },
-    type: "parallel",
-    types: {
-      events: {} as
-        | { type: "CAR_TRAFFIC_RED" }
-        | { type: "CAR_TRAFFIC_GREEN" },
     },
   },
 );
