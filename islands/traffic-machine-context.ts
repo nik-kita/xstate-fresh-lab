@@ -14,7 +14,6 @@ export function createMachineContextWithSignals<TLogic extends AnyActorLogic>(
   effect(() => {
     const subscription = actor.subscribe((s) => {
       subscribers.forEach((subscriber) => subscriber(s));
-      console.log(subscribers.length);
     });
 
     return () => subscription.unsubscribe();
@@ -22,7 +21,7 @@ export function createMachineContextWithSignals<TLogic extends AnyActorLogic>(
 
   return {
     actor,
-    useSelector(cb: (s: SnapshotFrom<TLogic>) => void) {
+    useSelector<T>(cb: (s: SnapshotFrom<TLogic>) => T) {
       const selection = useSignal(cb(actor.getSnapshot()));
       subscribers.push((s) => {
         selection.value = cb(s);

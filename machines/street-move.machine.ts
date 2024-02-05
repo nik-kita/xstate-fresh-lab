@@ -187,7 +187,7 @@ export const machine = setup(settings).createMachine(
               type: "red-color",
             },
             after: {
-              "500": {
+              "2000": {
                 target: "yellow",
               },
             },
