@@ -1,3 +1,4 @@
+import Car from "../islands/Car.tsx";
 import Traffic from "../islands/Traffic.tsx";
 import UiWrapper from "../islands/UiWrapper.tsx";
 
@@ -14,6 +15,7 @@ export default function Home() {
             alt="the Fresh logo: a sliced lemon dripping with juice"
           />
           <Traffic />
+          <Car />
         </div>
       </div>
     </UiWrapper>
