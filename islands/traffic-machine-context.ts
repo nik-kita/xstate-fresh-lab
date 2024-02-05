@@ -27,6 +27,8 @@ export function createMachineContextWithSignals<TLogic extends AnyActorLogic>(
       subscribers.push((s) => {
         selection.value = cb(s);
       });
+
+      return selection;
     },
   };
 }
