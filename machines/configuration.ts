@@ -1,6 +1,9 @@
-// @deno-types="npm:xstate"
-import { assign } from "xstate";
-import { StreetMachineCtx } from "../types.ts";
+export type StreetMachineCtx = {
+  traffic_light: "green" | "red" | "yellow";
+  prev_traffic_light: "green" | "red" | "yellow";
+  count_cars_on_zebra: number;
+  count_pedestrians_on_zebra: number;
+};
 
 export const types = {} as {
   context: StreetMachineCtx;
@@ -8,64 +11,16 @@ export const types = {} as {
     | { type: "CAR_TRAFFIC_RED" }
     | { type: "CAR_TRAFFIC_GREEN" };
 };
-export const context = {
+export const context: StreetMachineCtx = {
   count_cars_on_zebra: 0,
   count_pedestrians_on_zebra: 0,
   traffic_light: "green",
-  prev_traffic_light: "red",
-} satisfies StreetMachineCtx;
+  prev_traffic_light: "yellow",
+};
 export const settings = {
+  id: "variant 2 3",
   types: {} as {
     context: StreetMachineCtx;
-  },
-  actions: {
-    "car-on-zebra": ({ context }) => {
-      assign(
-        {
-          count_cars_on_zebra: context.count_cars_on_zebra + 1,
-        } satisfies Partial<StreetMachineCtx>,
-      );
-    },
-    "car-leaves-zebra": ({ context }) => {
-      assign(
-        {
-          count_cars_on_zebra: context.count_cars_on_zebra === 0
-            ? 0
-            : context.count_cars_on_zebra - 1,
-        } satisfies Partial<StreetMachineCtx>,
-      );
-    },
-    "pedestrian-on-zebra": ({ context }) => {
-      assign(
-        {
-          count_pedestrians_on_zebra: context.count_pedestrians_on_zebra + 1,
-        } satisfies Partial<StreetMachineCtx>,
-      );
-    },
-    "pedestrian-leaves-zebra": ({ context }) => {
-      assign(
-        {
-          count_pedestrians_on_zebra: context.count_pedestrians_on_zebra === 0
-            ? 0
-            : context.count_pedestrians_on_zebra - 1,
-        } satisfies Partial<StreetMachineCtx>,
-      );
-    },
-    "green-color"() {
-        assign({
-          traffic_light: "green",
-        });
-    },
-    "yellow-color"() {
-      assign({
-        traffic_light: "yellow",
-      });
-    },
-    "red-color"() {
-      assign({
-        traffic_light: "red",
-      });
-    },
   },
   actors: {},
   guards: {

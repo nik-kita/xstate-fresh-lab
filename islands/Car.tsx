@@ -11,8 +11,11 @@ export default function Car() {
         ? "bg-green-500"
         : car.value === "stop"
         ? "bg-red-500"
+        : car.value === "extra-stop"
+        ? "bg-yellow-400"
         : "bg-blue-600"}
     >
+      <h1>The Car</h1>
       {car.value}
     </div>
   );

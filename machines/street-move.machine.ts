@@ -1,10 +1,9 @@
 // @deno-types="npm:xstate"
-import { assign, setup } from "xstate";
+import { assign, raise, setup } from "xstate";
 import { context, settings } from "./configuration.ts";
 
 export const machine = setup(settings).createMachine(
   {
-    id: "variant 2 3",
     context,
     type: "parallel",
     states: {
@@ -55,9 +54,9 @@ export const machine = setup(settings).createMachine(
                 {
                   target: "cross zebra",
                   actions: [
-                    {
-                      type: "car-on-zebra",
-                    },
+                    assign(({ context: { count_cars_on_zebra } }) => ({
+                      count_cars_on_zebra: ++count_cars_on_zebra,
+                    })),
                   ],
                 },
               ],
@@ -68,9 +67,11 @@ export const machine = setup(settings).createMachine(
               "213": {
                 target: "move",
                 actions: [
-                  {
-                    type: "car-leaves-zebra",
-                  },
+                  assign(({ context: { count_cars_on_zebra } }) => ({
+                    count_cars_on_zebra: count_cars_on_zebra === 0
+                      ? 0
+                      : --count_cars_on_zebra,
+                  })),
                 ],
               },
             },
@@ -124,9 +125,9 @@ export const machine = setup(settings).createMachine(
                 {
                   target: "cross zebra",
                   actions: [
-                    {
-                      type: "pedestrian-on-zebra",
-                    },
+                    assign(({ context: { count_pedestrians_on_zebra } }) => ({
+                      count_pedestrians_on_zebra: ++count_pedestrians_on_zebra,
+                    })),
                   ],
                 },
               ],
@@ -137,9 +138,11 @@ export const machine = setup(settings).createMachine(
               "1023": {
                 target: "walk",
                 actions: [
-                  {
-                    type: "pedestrian-leaves-zebra",
-                  },
+                  assign(({ context: { count_pedestrians_on_zebra } }) => ({
+                    count_pedestrians_on_zebra: count_pedestrians_on_zebra === 0
+                      ? 0
+                      : --count_pedestrians_on_zebra,
+                  })),
                 ],
               },
             },
@@ -150,9 +153,10 @@ export const machine = setup(settings).createMachine(
         initial: "green",
         states: {
           green: {
-            entry: {
-              type: "green-color",
-            },
+            entry: [
+              assign({ traffic_light: "green" }),
+              raise({ type: "CAR_TRAFFIC_GREEN" }) as any,
+            ],
             after: {
               "3000": {
                 target: "yellow",
@@ -161,9 +165,9 @@ export const machine = setup(settings).createMachine(
             },
           },
           yellow: {
-            entry: {
-              type: "yellow-color",
-            },
+            entry: [
+              assign({ traffic_light: "yellow" }),
+            ],
             after: {
               "1000": [
                 {
@@ -183,9 +187,10 @@ export const machine = setup(settings).createMachine(
             },
           },
           red: {
-            entry: {
-              type: "red-color",
-            },
+            entry: [
+              raise({ type: "CAR_TRAFFIC_RED" }) as any,
+              assign({ traffic_light: "red" }),
+            ],
             after: {
               "2000": {
                 target: "yellow",

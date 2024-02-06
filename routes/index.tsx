@@ -1,4 +1,5 @@
 import Car from "../islands/Car.tsx";
+import Pedestrian from "../islands/Pedestrian.tsx";
 import Traffic from "../islands/Traffic.tsx";
 import UiWrapper from "../islands/UiWrapper.tsx";
 
@@ -16,6 +17,7 @@ export default function Home() {
           />
           <Traffic />
           <Car />
+          <Pedestrian />
         </div>
       </div>
     </UiWrapper>

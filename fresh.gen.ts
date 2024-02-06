@@ -8,6 +8,7 @@ import * as $api_joke from "./routes/api/joke.ts";
 import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
 import * as $Car from "./islands/Car.tsx";
+import * as $Pedestrian from "./islands/Pedestrian.tsx";
 import * as $Traffic from "./islands/Traffic.tsx";
 import * as $UiWrapper from "./islands/UiWrapper.tsx";
 import * as $traffic_machine_context from "./islands/traffic-machine-context.ts";
@@ -23,6 +24,7 @@ const manifest = {
   },
   islands: {
     "./islands/Car.tsx": $Car,
+    "./islands/Pedestrian.tsx": $Pedestrian,
     "./islands/Traffic.tsx": $Traffic,
     "./islands/UiWrapper.tsx": $UiWrapper,
     "./islands/traffic-machine-context.ts": $traffic_machine_context,
